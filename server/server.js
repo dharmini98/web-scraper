@@ -29,8 +29,21 @@ app.post('/scrape', async (req, res) => {
         const title = $('title').text();
         const headlines = $('h1').map((i, element) => $(element).text()).get();
 
-        const logo = $('img').filter((i, el) => $(el).attr('alt')?.toLowerCase().includes('logo')).attr('src');
-        
+        let logo = $('img').filter((i, el) => $(el).attr('alt')?.toLowerCase().includes('logo')).attr('src');
+    
+        if (!logo) {
+            const logoSvgElement = $('svg[id*="logo"], svg[class*="logo"]').first();
+            if (logoSvgElement.length) {
+                logo = $('<div>').append(logoSvgElement.clone()).html();
+            } else {
+                const logoSvgContainer = $('svg').closest('[id*="logo"], [class*="logo"]');
+                if (logoSvgContainer.length) {
+                    // Take only the SVG element, not the entire parent HTML
+                    logo = $('<div>').append(logoSvgContainer.find('svg').first().clone()).html();
+                }
+            }
+        }
+    
         //colorpalette
         const __filename=fileURLToPath(import.meta.url);
         const __dirname = dirname(__filename);
