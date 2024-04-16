@@ -1,0 +1,26 @@
+# Dependency directories
+node_modules/
+
+# Environment secrets
+.env
+
+# Build outputs
+dist/
+build/
+out/
+
+# Logs
+*.log
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Editors' folders
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
+ 
