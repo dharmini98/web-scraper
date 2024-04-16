@@ -2,10 +2,15 @@
 import express from 'express';
 import puppeteer from 'puppeteer';
 import {load} from 'cheerio';
-//import * as cheerio from 'cheerio';
 import cors from 'cors';
-import ColorThief from 'color-thief-node';
+import {getPaletteFromURL} from 'color-thief-node';
+import fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
+//const getPalette = ColorThief.getPalette;
 
 const app = express();
 app.use(cors());
@@ -25,8 +30,21 @@ app.post('/scrape', async (req, res) => {
         const headlines = $('h1').map((i, element) => $(element).text()).get();
 
         const logo = $('img').filter((i, el) => $(el).attr('alt')?.toLowerCase().includes('logo')).attr('src');
-        const screenshot = await page.screenshot();
-        const topColors = await ColorThief.getPalette(screenshot, 3);
+        
+        //colorpalette
+        const __filename=fileURLToPath(import.meta.url);
+        const __dirname = dirname(__filename);
+        const tempDir = path.join(__dirname, 'temp');
+
+        fs.mkdirSync(tempDir, { recursive: true });
+
+        const screenshotFileName = `screenshot-${uuidv4()}.png`;
+        const screenshotPath = path.join(tempDir, screenshotFileName);
+
+      try{
+        await page.screenshot({ path: screenshotPath });
+
+        const topColors = await getPaletteFromURL(screenshotPath, 3);
 
         const typography = await page.evaluate(() => {
             const heading = document.querySelector('h1');
@@ -41,8 +59,6 @@ app.post('/scrape', async (req, res) => {
                 borderRadius: window.getComputedStyle(button)['border-radius']
             } : {};
         });
-        
-        await browser.close();
 
         
         res.json({
@@ -53,6 +69,17 @@ app.post('/scrape', async (req, res) => {
             typography,
             ctaStyles
         });
+      } catch(error)
+      {
+        console.error('Error during scraping:', error);
+        res.status(500).send('An error during scraping');
+      } finally
+      {
+         fs.unlink(screenshotPath, err => {
+            if (err) console.error('Failed to delete screenshot:', err);
+        });
+        await browser.close();
+      }
 
 });
 
