@@ -13,7 +13,7 @@ Before running the project, you need to have Node.js installed on your system. Y
 
 ## Running Frontend:
 cd frontend/brandstyle
-npm install
+npm install  //used Puppeteer and Cheerio for web scraping
 Start the application using: npm start
 
 ## Running Backend
