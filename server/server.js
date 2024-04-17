@@ -22,6 +22,12 @@ app.post('/scrape', async (req, res) => {
         const page = await browser.newPage();
         await page.goto(url, { waitUntil: 'networkidle2' });
 
+        await Promise.all([
+            page.waitForSelector('img[alt*="logo"]', {visible: true, timeout: 20000}).catch(e => console.error(e)),
+            page.waitForSelector('svg[id*="logo"], svg[class*="logo"]', {visible: true, timeout: 20000}).catch(e => console.error(e)),
+        ]).catch(e => {
+            console.error('Logo did not load in time or was not found', e);
+          });
         const html = await page.content();
         const $ = load(html);
 
