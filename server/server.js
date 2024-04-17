@@ -25,6 +25,8 @@ app.post('/scrape', async (req, res) => {
         await Promise.all([
             page.waitForSelector('img[alt*="logo"]', {visible: true, timeout: 20000}).catch(e => console.error(e)),
             page.waitForSelector('svg[id*="logo"], svg[class*="logo"]', {visible: true, timeout: 20000}).catch(e => console.error(e)),
+            page.waitForSelector('.svgContainer svg', { visible: true, timeout: 20000 }),
+
         ]).catch(e => {
             console.error('Logo did not load in time or was not found', e);
           });
