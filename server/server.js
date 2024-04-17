@@ -21,15 +21,16 @@ app.post('/scrape', async (req, res) => {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
         await page.goto(url, { waitUntil: 'networkidle2' });
-
+        try{
         await Promise.all([
-            page.waitForSelector('img[alt*="logo"]', {visible: true, timeout: 20000}).catch(e => console.error(e)),
+            page.waitForSelector('img[alt*="logo"]', {visible: true, timeout: 10000}).catch(e => console.error(e)),
             page.waitForSelector('svg[id*="logo"], svg[class*="logo"]', {visible: true, timeout: 20000}).catch(e => console.error(e)),
-            page.waitForSelector('.svgContainer svg', { visible: true, timeout: 20000 }),
+            page.waitForSelector('.svgContainer svg', { visible: true, timeout: 10000 }),
 
-        ]).catch(e => {
-            console.error('Logo did not load in time or was not found', e);
-          });
+        ]);
+        }catch (e) {
+            console.error('Error waiting for selectors', e);
+          }
         const html = await page.content();
         const $ = load(html);
 
@@ -104,7 +105,7 @@ app.post('/scrape', async (req, res) => {
 
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
