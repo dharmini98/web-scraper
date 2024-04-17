@@ -44,3 +44,18 @@
   display: inline-block; 
   border: 1px solid #000; 
 }
+
+.logo-img {
+  max-width: 100%;  
+  max-height: 40px; 
+  width: auto;  
+  height: auto; 
+}
+
+.logo-container svg {
+  max-width: 100%;  
+  max-height: 40px; 
+  width: auto;  
+  height: auto; 
+}
+

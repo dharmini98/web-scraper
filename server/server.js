@@ -38,6 +38,14 @@ app.post('/scrape', async (req, res) => {
         const title = $('title').text();
         const headlines = $('h1').map((i, element) => $(element).text()).get();
 
+        let svgDefinitions = '';
+        $('svg').each((i, elem) => {
+        const svgContent = $('<div>').append($(elem).clone()).html();
+        if (svgContent.includes('<defs>') || svgContent.includes('<symbol>')) {
+        svgDefinitions += svgContent;
+        }
+        });
+
         let logo = $('img').filter((i, el) => $(el).attr('alt')?.toLowerCase().includes('logo')).attr('src');
     
         if (!logo) {
@@ -52,7 +60,12 @@ app.post('/scrape', async (req, res) => {
                 }
             }
         }
-    
+        if (!logo) {
+            let logoSvgContainer = $('.svgContainer').first().html();
+            if (logoSvgContainer) {
+                logo = logoSvgContainer;
+            }
+        }
         //colorpalette
         const __filename=fileURLToPath(import.meta.url);
         const __dirname = dirname(__filename);
@@ -89,7 +102,8 @@ app.post('/scrape', async (req, res) => {
             logo,
             topColors,
             typography,
-            ctaStyles
+            ctaStyles,
+            svgDefinitions
         });
       } catch(error)
       {
@@ -109,3 +123,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
