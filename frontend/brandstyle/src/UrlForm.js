@@ -9,7 +9,7 @@ function UrlInputForm({ onUrlSubmit }) {
       };
       return (
         <form onSubmit={handleSubmit}>
-          <label htmlFor="urlInput">Enter Website URL:</label>
+          <label htmlFor="urlInput">Enter Website URL: </label>
           <input
             id="urlInput"
             type="text"

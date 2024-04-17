@@ -31,7 +31,8 @@ function Logo({ logoData , svgDefinitions}) {
   };
 
   const logoType = determineLogoType(logoData);
-
+ 
+  const renderLogo = () => {
   switch (logoType) {
     case 'svgMarkup':
       const combinedSvg = `${svgDefinitions || ''}${logoData}`;
@@ -46,6 +47,13 @@ function Logo({ logoData , svgDefinitions}) {
     default:
       return <p>No logo found.</p>;
   }
+};
+return (
+  <div>
+    <h2>Brand Logo</h2>
+    {renderLogo()}
+  </div>
+);
 }
 
 function App() {
@@ -69,15 +77,33 @@ function App() {
       setScrapedData(null);
     });
   };
+  const getUniqueHeadlines = (headlines) => {
+    return [...new Set(headlines)];
+  };
+
   return(
     <div>
-      <h1>Welcome to BrandStyle</h1>
+      <h1 className="website-heading">Welcome to BrandStyle</h1>
       <UrlInputForm onUrlSubmit={handleUrlSubmit} />
       {scrapedData && <div className="results">
-        <h2>Scraped Data</h2>
+        <h2 className="brand-title">Title: {scrapedData.title}</h2>
+        <h3 className="brand-headline">Sub-Heading: {getUniqueHeadlines(scrapedData.headlines)[0]}</h3>
         <ColorPalette colors={scrapedData.topColors} />
         <Logo logoData={scrapedData.logo} svgDefinitions={scrapedData.svgDefinitions} />
-        <pre>{JSON.stringify(scrapedData, null, 2)}</pre> 
+        <h4 className="brand-typography">Typography: {scrapedData.typography}</h4>
+        <div className="brand-cta">
+            <h5>Call-To-Action Style:</h5>
+            <div style={{
+              backgroundColor: scrapedData.ctaStyles.backgroundColor,
+              color: scrapedData.ctaStyles.textColor +'!important',
+              borderRadius: scrapedData.ctaStyles.borderRadius.includes('px')? scrapedData.ctaStyles.borderRadius: `${scrapedData.ctaStyles.borderRadius}px`,
+              padding: '10px', 
+              display: 'inline-block', 
+              
+            }}>
+              Example Button
+            </div>
+          </div>
       </div>}
     </div>
   );

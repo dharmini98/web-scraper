@@ -59,3 +59,33 @@
   height: auto; 
 }
 
+
+.brand-title {
+  font-size: 24px; 
+  color: #333; 
+  margin-bottom: 10px; 
+  font-family:'Corbert Condensed Italic';
+}
+
+
+.brand-headline {
+  font-size: 18px; 
+  color: #666; 
+  margin-bottom: 8px; 
+}
+
+
+.brand-typography {
+  font-size: 16px; 
+  color: #999; 
+  font-style: italic; 
+  margin-bottom: 6px; 
+}
+
+.website-heading {
+  font-size: 28px;
+  color:#000;
+  font-style: normal;
+  font-family: 'Aileron';
+  margin-bottom: 7px;
+}
